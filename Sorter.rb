@@ -27,15 +27,10 @@ class Sorter
       temp = ext.split('.')
       if temp.length == 1
         add_no_ext_file(ext)
-#        @ext_list.push('no_ext')
-#        @no_ext_list.push(ext)
       elsif ext[/^\./]
         add_hidden_file(ext)
-#        @ext_list.push('hidden')
-#        @hidden_list.push(ext)
       else
         add_normal_file(temp[-1])
-#        @ext_list.push(temp[-1])
       end
     end
     @ext_list.uniq!
@@ -78,14 +73,26 @@ class Sorter
     Dir.chdir(@input_dir)
     @ext_list.each do |ext|
       if ext == "no_ext"
-        FileUtils.cp(@no_ext_list, File.join(@output_dir, "no_ext"))
+        copy_no_ext_files
       elsif ext == "hidden"
-        FileUtils.cp(@hidden_list, File.join(@output_dir, "hidden"))
+        copy_hidden_files
       else
-        files = Dir.glob("*.#{ext}")
-        FileUtils.cp(files, File.join(@output_dir, ext))
+        copy_normal_files(ext)
       end
     end
+  end
+  
+  def copy_no_ext_files
+    FileUtils.cp(@no_ext_list, File.join(@output_dir, "no_ext"))
+  end
+  
+  def copy_hidden_files
+    FileUtils.cp(@hidden_list, File.join(@output_dir, "hidden"))
+  end
+  
+  def copy_normal_files(ext)
+    files = Dir.glob("*.#{ext}")
+    FileUtils.cp(files, File.join(@output_dir, ext))
   end
   
   def run
