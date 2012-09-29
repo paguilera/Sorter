@@ -10,16 +10,28 @@ class Sorter
 
   def make_file_list
   # make a list of all the files in the input directory
-    Dir.chdir(@input_dir)
-    @file_list = Dir.glob("*")
+    @file_list = Array.new
+    Dir.entries(@input_dir).each do |filename|
+      @file_list.push(filename) unless filename[/\.\.?/].eql?(filename)
+    end
   end
   
   def make_ext_list
   # make a list of the unique extensions
     @ext_list = Array.new
+    @no_ext_list = Array.new
+    @hidden_list = Array.new
     @file_list.each do |ext|
       temp = ext.split('.')
-      @ext_list.push(temp[-1])
+      if temp.length == 1
+        @ext_list.push('no_ext')
+        @no_ext_list.push(ext)
+      elsif ext[/^\./]
+        @ext_list.push('hidden')
+        @hidden_list.push(ext)
+      else
+        @ext_list.push(temp[-1])
+      end
     end
     @ext_list.uniq!
   end
@@ -46,8 +58,14 @@ class Sorter
   # finally, copy the files from the input directory to the correct output directory
     Dir.chdir(@input_dir)
     @ext_list.each do |ext|
-      files = Dir.glob("*.#{ext}")
-      FileUtils.cp(files, File.join(@output_dir, ext))
+      if ext == "no_ext"
+        FileUtils.cp(@no_ext_list, File.join(@output_dir, "no_ext"))
+      elsif ext == "hidden"
+        FileUtils.cp(@hidden_list, File.join(@output_dir, "hidden"))
+      else
+        files = Dir.glob("*.#{ext}")
+        FileUtils.cp(files, File.join(@output_dir, ext))
+      end
     end
   end
 end
