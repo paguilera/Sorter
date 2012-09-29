@@ -1,4 +1,10 @@
-Initial version of the readme file for the Sorter project.
+This is a file script written during the quiz portion of a job interview.
 
-More details will be posted later.
+The purpose of this script is to sort files that are located in a specified working directory.  Those sorted files are then placed in a backup directory such that each set of file extensions will have their own subdirectory.
+
+The initial timeframe for writing this script was one hour.
+
+I was able to complete the first part of the quiz (the backup and sort) but I was unable to complete the second (writing test files to prove the script works).
+
+Looking at updating this script and incorporating tests.  Planning on keeping them in this repo instead of creating a new one as I initially planned.
 
